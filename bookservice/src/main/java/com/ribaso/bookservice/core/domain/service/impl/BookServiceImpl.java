@@ -1,12 +1,13 @@
-package com.ribaso.bookservice.core.domain.service;
+package com.ribaso.bookservice.core.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ribaso.bookservice.core.domain.model.Book;
-import com.ribaso.bookservice.core.domain.model.BookRepository;
-import com.ribaso.bookservice.core.domain.service.exceptions.BookAlreadyExistsException;
-import com.ribaso.bookservice.core.domain.service.exceptions.BookNotFoundException;
+import com.ribaso.bookservice.core.domain.service.interfaces.BookRepository;
+import com.ribaso.bookservice.core.domain.service.interfaces.IBookService;
+import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;

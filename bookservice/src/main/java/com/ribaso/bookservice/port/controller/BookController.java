@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ribaso.bookservice.core.domain.model.Book;
-import com.ribaso.bookservice.core.domain.service.IBookService;
-import com.ribaso.bookservice.core.domain.service.exceptions.BookAlreadyExistsException;
-import com.ribaso.bookservice.core.domain.service.exceptions.BookNotFoundException;
+import com.ribaso.bookservice.core.domain.service.interfaces.IBookService;
+import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 
 import java.util.List;
 

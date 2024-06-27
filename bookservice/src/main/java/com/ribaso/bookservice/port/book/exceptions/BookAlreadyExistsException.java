@@ -1,4 +1,4 @@
-package com.ribaso.bookservice.core.domain.service.exceptions;
+package com.ribaso.bookservice.port.book.exceptions;
 /**
  * Exception thrown when a book already exists.
  */

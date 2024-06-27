@@ -1,9 +1,9 @@
-package com.ribaso.bookservice.core.domain.service;
+package com.ribaso.bookservice.core.domain.service.interfaces;
 
 import java.util.List;
 import com.ribaso.bookservice.core.domain.model.Book;
-import com.ribaso.bookservice.core.domain.service.exceptions.BookAlreadyExistsException;
-import com.ribaso.bookservice.core.domain.service.exceptions.BookNotFoundException;
+import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 
 public interface IBookService {
 
