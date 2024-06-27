@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.IBookService;
+import com.ribaso.bookservice.core.domain.service.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.core.domain.service.exceptions.BookNotFoundException;
 
 import java.util.List;
 
@@ -18,25 +20,25 @@ public class BookController {
     private IBookService bookService;
 
     @GetMapping("/{bookID}")
-    public ResponseEntity<Book> getBook(@PathVariable String bookID) {
+    public ResponseEntity<Book> getBook(@PathVariable String bookID) throws BookNotFoundException {
         Book book = bookService.getBook(bookID);
         return (book != null) ? ResponseEntity.ok(book) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Void> addBook(@RequestBody Book book) {
+    public ResponseEntity<Void> addBook(@RequestBody Book book) throws BookAlreadyExistsException {
         bookService.addBook(book);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{bookID}")
-    public ResponseEntity<Void> updateBook(@PathVariable String bookID, @RequestBody Book book) {
+    public ResponseEntity<Void> updateBook(@PathVariable String bookID, @RequestBody Book book) throws BookNotFoundException {
         bookService.updateBook(bookID, book);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{bookID}")
-    public ResponseEntity<Void> removeBook(@PathVariable String bookID) {
+    public ResponseEntity<Void> removeBook(@PathVariable String bookID) throws BookNotFoundException {
         bookService.removeBook(bookID);
         return ResponseEntity.noContent().build();
     }

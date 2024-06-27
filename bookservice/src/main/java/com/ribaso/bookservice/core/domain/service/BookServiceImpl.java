@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.model.BookRepository;
+import com.ribaso.bookservice.core.domain.service.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.core.domain.service.exceptions.BookNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,28 +18,41 @@ public class BookServiceImpl implements IBookService {
     private BookRepository bookRepository;
 
     @Override
-    public Book getBook(String bookID) {
-        return bookRepository.findById(bookID).orElse(null);
+    public Book getBook(String bookID) throws BookNotFoundException {
+        return bookRepository.findById(bookID).orElseThrow(() -> new BookNotFoundException("Book with ID " + bookID + " not found."));
     }
 
     @Override
-    public void addBook(Book book) {
+    public void addBook(Book book) throws BookAlreadyExistsException {
+        if (bookRepository.existsById(book.getId())) {
+            throw new BookAlreadyExistsException("Book with ID " + book.getId() + " already exists.");
+        }
         bookRepository.save(book);
     }
 
     @Override
-    public void updateBook(String bookID, Book book) {
+    public void updateBook(String bookID, Book book)throws BookNotFoundException {
+        if (!bookRepository.existsById(bookID)) {
+            throw new BookNotFoundException("Book with ID " + bookID + " not found.");
+        }
         bookRepository.save(book);
     }
 
     @Override
-    public void removeBook(String bookID) {
+    public void removeBook(String bookID) throws BookNotFoundException {
+        if (!bookRepository.existsById(bookID)) {
+            throw new BookNotFoundException("Book with ID " + bookID + " not found.");
+        }
         bookRepository.deleteById(bookID);
     }
 
     @Override
-    public String getBookID(String isbn) {
-        return bookRepository.findByIsbn(isbn).getId();
+    public String getBookID(String isbn) throws BookNotFoundException{
+        Book book = bookRepository.findByIsbn(isbn);
+        if (book == null) {
+            throw new BookNotFoundException("Book with ISBN " + isbn + " not found.");
+        }
+        return book.getId();
     }
 
     @Override
