@@ -5,7 +5,7 @@ import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 import com.ribaso.bookservice.port.controller.BookController;
-
+import com.ribaso.bookservice.service.MessagePublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,9 @@ class BookControllerTest {
 
     @MockBean
     private BookService bookService;
+
+    @MockBean
+    private MessagePublisher messagePublisher;
 
     @Autowired
     private ObjectMapper objectMapper;

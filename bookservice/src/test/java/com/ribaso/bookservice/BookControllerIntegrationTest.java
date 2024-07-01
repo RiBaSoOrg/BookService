@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class BookControllerIntegrationTest {
 
     @Autowired
@@ -33,6 +35,7 @@ public class BookControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        bookRepository.deleteAll();
         book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", 100);
         bookRepository.save(book);
     }
@@ -103,7 +106,6 @@ public class BookControllerIntegrationTest {
         mockMvc.perform(delete("/books/999"))
                 .andExpect(status().isNotFound());
     }
-
 
     @Test
     void getBookByIsbn_ShouldReturnNotFound_WhenBookDoesNotExist() throws Exception {
