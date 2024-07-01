@@ -5,7 +5,7 @@ import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
 import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 
-public interface IBookService {
+public interface BookService {
 
     /**
      * Retrieves a book by its unique identifier.

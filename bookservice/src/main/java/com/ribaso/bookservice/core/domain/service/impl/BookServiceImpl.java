@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookRepository;
-import com.ribaso.bookservice.core.domain.service.interfaces.IBookService;
+import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
 import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BookServiceImpl implements IBookService {
+public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;

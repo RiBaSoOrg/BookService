@@ -2,7 +2,7 @@ package com.ribaso.bookservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ribaso.bookservice.core.domain.model.Book;
-import com.ribaso.bookservice.core.domain.service.interfaces.IBookService;
+import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
 import com.ribaso.bookservice.port.controller.BookController;
 
@@ -29,7 +29,7 @@ class BookControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private IBookService bookService;
+    private BookService bookService;
 
     @Autowired
     private ObjectMapper objectMapper;
