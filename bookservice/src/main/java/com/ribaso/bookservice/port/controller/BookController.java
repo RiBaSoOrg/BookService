@@ -9,15 +9,20 @@ import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
 import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
+import com.ribaso.bookservice.service.MessagePublisher;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/books")
 public class BookController {
+    
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private MessagePublisher messagePublisher;
 
     @GetMapping("/{bookID}")
     public ResponseEntity<Book> getBook(@PathVariable String bookID) throws BookNotFoundException {
@@ -47,5 +52,11 @@ public class BookController {
     public ResponseEntity<List<Book>> getBooks(@RequestParam int amount) {
         List<Book> books = bookService.getBooks(amount);
         return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("/send")
+    public ResponseEntity<String> sendMessage(@RequestParam String message) {
+        messagePublisher.sendMessage(message);
+        return ResponseEntity.ok("Message sent!");
     }
 }
