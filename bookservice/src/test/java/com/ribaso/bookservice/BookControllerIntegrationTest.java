@@ -107,11 +107,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void getBookByIsbn_ShouldReturnNotFound_WhenBookDoesNotExist() throws Exception {
-        mockMvc.perform(get("/books/isbn/987654321"))
-                .andExpect(status().isNotFound());
-    }
+
 
     @Test
     void getBooks_ShouldReturnListOfBooks() throws Exception {

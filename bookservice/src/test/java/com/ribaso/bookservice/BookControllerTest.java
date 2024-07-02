@@ -3,9 +3,10 @@ package com.ribaso.bookservice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
-import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
-import com.ribaso.bookservice.port.controller.BookController;
-import com.ribaso.bookservice.service.MessagePublisher;
+import com.ribaso.bookservice.port.user.controller.BookController;
+import com.ribaso.bookservice.port.book.producer.UpdateProductProducer;
+import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ class BookControllerTest {
     private BookService bookService;
 
     @MockBean
-    private MessagePublisher messagePublisher;
+    private UpdateProductProducer messagePublisher;
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -3,8 +3,8 @@ package com.ribaso.bookservice;
 import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.impl.BookServiceImpl;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookRepository;
-import com.ribaso.bookservice.port.book.exceptions.BookNotFoundException;
-import com.ribaso.bookservice.port.book.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.port.exceptions.BookAlreadyExistsException;
+import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
