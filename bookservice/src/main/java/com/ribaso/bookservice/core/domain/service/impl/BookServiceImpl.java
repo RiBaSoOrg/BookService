@@ -1,6 +1,6 @@
 package com.ribaso.bookservice.core.domain.service.impl;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +18,6 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;
-
-@RabbitListener(queues = "bookQueue")
-    public Book getBookDetails(String bookId) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (book == null) {
-            return null;
-        }
-        return book;
-    }
 
     @Override
     public Book getBook(String bookID) throws BookNotFoundException {
