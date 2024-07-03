@@ -1,5 +1,6 @@
 package com.ribaso.bookservice.core.domain.service.impl;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,19 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
+@RabbitListener(queues = "bookQueue")
+    public Book getBookDetails(String bookId) {
+        Book book = bookRepository.findById(bookId).orElse(null);
+        if (book == null) {
+            return null;
+        }
+        return book;
+    }
+
     @Override
     public Book getBook(String bookID) throws BookNotFoundException {
-        return bookRepository.findById(bookID).orElseThrow(() -> new BookNotFoundException("Book with ID " + bookID + " not found."));
+        return bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("Book with ID " + bookID + " not found."));
     }
 
     @Override
@@ -32,7 +43,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBook(String bookID, Book book)throws BookNotFoundException {
+    public void updateBook(String bookID, Book book) throws BookNotFoundException {
         if (!bookRepository.existsById(bookID)) {
             throw new BookNotFoundException("Book with ID " + bookID + " not found.");
         }
@@ -48,7 +59,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String getBookID(String isbn) throws BookNotFoundException{
+    public String getBookID(String isbn) throws BookNotFoundException {
         Book book = bookRepository.findByIsbn(isbn);
         if (book == null) {
             throw new BookNotFoundException("Book with ISBN " + isbn + " not found.");
@@ -58,7 +69,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getBooks(int amount) {
-        // maybe adjust 
+        // maybe adjust
         return bookRepository.findAll().stream().limit(amount).collect(Collectors.toList());
     }
 }
