@@ -6,6 +6,7 @@ import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class BookConsumer {
     private final BookService bookService;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private RabbitTemplate rabbitTemplate;
 
     public BookConsumer(BookService bookService) {
         this.bookService = bookService;
@@ -25,10 +26,10 @@ public class BookConsumer {
 
     @RabbitListener(queues = "bookQueue")
     @SendTo
-    public String getBookDetails(String bookId) throws BookNotFoundException {
+    public void getBookDetails(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
         try {
-            return objectMapper.writeValueAsString(book);
+            rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize book details", e);
         }
