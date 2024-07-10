@@ -29,6 +29,8 @@ public class BookConsumer {
     @SendTo
     public void getBookDetails(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
+        System.out.println(bookId);
+        System.out.println("Received book: " + book.getTitle());
         try {
             rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
             rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book, message -> {
