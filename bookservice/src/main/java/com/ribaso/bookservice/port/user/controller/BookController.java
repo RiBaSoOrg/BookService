@@ -5,6 +5,9 @@ import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.exceptions.BookAlreadyExistsException;
 import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +46,11 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> getBooks(@RequestParam int amount) {
+    @Operation(summary = "Retrieve books", description = "Retrieves a list of books. If 'amount' is set to 0, all books will be returned.")
+    public ResponseEntity<List<Book>> getBooks(@RequestParam (required = true)
+    @Parameter(description = "The maximum number of books to retrieve. Set to 0 to retrieve all books.")
+    int amount) {
+        
         return ResponseEntity.ok(bookService.getBooks(amount));
     }
 }
