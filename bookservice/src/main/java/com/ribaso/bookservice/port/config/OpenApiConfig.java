@@ -9,7 +9,7 @@ public class OpenApiConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("spring")
-                .packagesToScan("com.ribaso.checkoutservice.port.user.controller")
+                .packagesToScan("com.ribaso.bookservice.port.user.controller")
                 .build();
     }
 }
