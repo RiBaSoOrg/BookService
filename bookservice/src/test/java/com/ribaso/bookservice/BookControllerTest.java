@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.user.controller.BookController;
-import com.ribaso.bookservice.port.book.producer.UpdateProductProducer;
 import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -31,9 +30,6 @@ class BookControllerTest {
 
     @MockBean
     private BookService bookService;
-
-    @MockBean
-    private UpdateProductProducer messagePublisher;
 
     @Autowired
     private ObjectMapper objectMapper;
