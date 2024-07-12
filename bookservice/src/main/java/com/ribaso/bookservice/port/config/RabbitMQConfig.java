@@ -32,23 +32,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public MessageConverter jsonMessageConverter() {
+    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
+        rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
         return rabbitTemplate;
     }
 
-    @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(jsonMessageConverter());
-        return factory;
-    }
+    
 }
   
