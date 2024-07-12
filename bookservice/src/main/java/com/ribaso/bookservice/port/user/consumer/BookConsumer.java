@@ -5,6 +5,7 @@ import com.ribaso.bookservice.core.domain.model.Book;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookService;
 import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
 
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -32,7 +33,12 @@ public class BookConsumer {
         System.out.println(bookId);
         System.out.println("Received book: " + book.getTitle());
         try {
-            rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book);
+            rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book,  message -> {
+                message.getMessageProperties().setContentType(MessageProperties.CONTENT_TYPE_JSON);
+                System.out.println(message);
+                return message;
+               
+            });
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize book details", e);
         }
