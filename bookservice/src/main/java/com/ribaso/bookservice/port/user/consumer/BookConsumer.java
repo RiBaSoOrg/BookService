@@ -33,12 +33,7 @@ public class BookConsumer {
         System.out.println(bookId);
         System.out.println("Received book: " + book.getTitle());
         try {
-            rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book,  message -> {
-                message.getMessageProperties().setContentType(MessageProperties.CONTENT_TYPE_JSON);
-                System.out.println(message);
-                return message;
-               
-            });
+            rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize book details", e);
         }
