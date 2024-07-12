@@ -60,7 +60,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getBooks(int amount) {
-        // maybe adjust
-        return bookRepository.findAll().stream().limit(amount).collect(Collectors.toList());
+        List<Book> books = bookRepository.findAll();
+        if (amount > 0) {
+            return books.stream().limit(amount).collect(Collectors.toList());
+        }
+        return books;
     }
 }
