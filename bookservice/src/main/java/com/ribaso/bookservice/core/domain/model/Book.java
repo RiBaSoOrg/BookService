@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -11,7 +13,7 @@ import jakarta.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+public class Book implements Serializable {
     @Id
     private String id;
     private String title;
