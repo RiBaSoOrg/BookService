@@ -15,13 +15,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public TopicExchange bookExchange() {
-        return new TopicExchange("bookExchange");
-    }
-
-    @Bean
-    public Queue bookIdQueue() {
-        return new Queue("bookIdQueue");
+    public DirectExchange bookExchange() {
+        return new DirectExchange("bookExchange");
     }
 
     @Bean
@@ -29,10 +24,6 @@ public class RabbitMQConfig {
         return new Queue("bookQueue");
     }
 
-    @Bean
-    public Binding bindingId(Queue bookIdQueue, DirectExchange bookExchange) {
-        return BindingBuilder.bind(bookIdQueue).to(bookExchange).with("bookRoutingKey");
-    }
     @Bean
     public Binding binding(Queue bookQueue, DirectExchange bookExchange) {
         return BindingBuilder.bind(bookQueue).to(bookExchange).with("bookRoutingKey");
