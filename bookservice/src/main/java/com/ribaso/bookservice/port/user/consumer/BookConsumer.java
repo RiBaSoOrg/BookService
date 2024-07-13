@@ -26,8 +26,7 @@ public class BookConsumer {
         this.bookService = bookService;
     }
 
-    @RabbitListener(queues = "bookQueue")
-    @SendTo
+    @RabbitListener(queues = "bookIdQueue")
     public void getBookDetails(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
         System.out.println(bookId);
