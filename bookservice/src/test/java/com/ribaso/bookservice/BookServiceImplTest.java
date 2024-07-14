@@ -1,10 +1,12 @@
 package com.ribaso.bookservice;
 
 import com.ribaso.bookservice.core.domain.model.Book;
+import com.ribaso.bookservice.core.domain.model.BookDTO;
 import com.ribaso.bookservice.core.domain.service.impl.BookServiceImpl;
 import com.ribaso.bookservice.core.domain.service.interfaces.BookRepository;
 import com.ribaso.bookservice.port.exceptions.BookAlreadyExistsException;
 import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
+import com.ribaso.bookservice.port.integration.BookClient;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class BookServiceImplTest {
@@ -27,13 +30,19 @@ class BookServiceImplTest {
     @InjectMocks
     private BookServiceImpl bookService;
 
+    @Mock
+    private BookClient bookClient;
+
     private Book book;
+    private BookDTO bookDTO;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", 100);
+        bookDTO = new BookDTO("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "10", 100);
     }
+    
 
     @Test
     void getBook_ShouldReturnBook_WhenBookExists() throws BookNotFoundException {
@@ -125,5 +134,46 @@ class BookServiceImplTest {
 
         assertEquals(1, foundBooks.size());
         assertEquals(book.getId(), foundBooks.get(0).getId());
+    }
+
+      @Test
+    void syncBooksFromExternalApi_ShouldFetchAndSaveNewBooks() {
+        when(bookClient.fetchBooks()).thenReturn(Arrays.asList(bookDTO));
+        when(bookRepository.existsById("1")).thenReturn(false);
+
+        bookService.syncBooksFromExternalApi();
+
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+    @Test
+    void syncBooksFromExternalApi_ShouldUpdateExistingBooks() {
+        when(bookClient.fetchBooks()).thenReturn(Arrays.asList(bookDTO));
+        when(bookRepository.existsById("1")).thenReturn(true);
+        Book newBook = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "10", 100);
+        when(bookRepository.findById("1")).thenReturn(Optional.of(book));
+
+        bookService.syncBooksFromExternalApi();
+
+        verify(bookRepository, times(1)).save(newBook);
+    }
+
+    @Test
+    void convertToEntity_ShouldConvertBookDTOToBook() {
+        Book convertedBook = bookService.convertToEntity(bookDTO);
+
+        assertEquals(bookDTO.getId(), convertedBook.getId());
+        assertEquals(bookDTO.getTitle(), convertedBook.getTitle());
+        assertEquals(bookDTO.getAuthor(), convertedBook.getAuthor());
+        assertEquals(bookDTO.getPrice(), convertedBook.getPrice());
+    }
+
+    @Test
+    void syncBooksFromExternalApi_ShouldHandleEmptyListFromAPI() {
+        when(bookClient.fetchBooks()).thenReturn(Arrays.asList());
+
+        bookService.syncBooksFromExternalApi();
+
+        verify(bookRepository, never()).save(any(Book.class));
     }
 }
