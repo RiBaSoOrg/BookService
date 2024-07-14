@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class BookConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(Book.class);
-   
+
     @Autowired
     private final BookService bookService;
 
@@ -31,9 +31,10 @@ public class BookConsumer {
     }
 
     @RabbitListener(queues = "bookQueue")
-    public void getBookDetails(String bookId) throws BookNotFoundException {
+    @SendTo
+    public Book handleBookRequest(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
-        log.info("Received book ID: {}, Book Title: {}", bookId, book.getTitle());
-        rabbitTemplate.convertAndSend("bookQueue",book);
+        log.info("Received and responding with book ID: {}, Book Title: {}", bookId, book.getTitle());
+        return book; // Die Antwort wird automatisch an die `replyTo`-Queue gesendet
     }
 }
