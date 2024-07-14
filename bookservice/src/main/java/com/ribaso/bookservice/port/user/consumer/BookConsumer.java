@@ -31,7 +31,6 @@ public class BookConsumer {
     }
 
     @RabbitListener(queues = "bookQueue")
-    @SendTo
     public Book handleBookRequest(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
         log.info("Received and responding with book ID: {}, Book Title: {}", bookId, book.getTitle());

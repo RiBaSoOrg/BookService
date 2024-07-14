@@ -25,16 +25,6 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue bookResponseQueue() {
-        return new Queue("bookResponseQueue");
-    }
-
-    @Bean
-    public Binding bindingResponse(Queue bookResponseQueue, DirectExchange bookExchange) {
-        return BindingBuilder.bind(bookResponseQueue).to(bookExchange).with("bookResponseRoutingKey");
-    }
-
-    @Bean
     public Binding binding(Queue bookQueue, DirectExchange bookExchange) {
         return BindingBuilder.bind(bookQueue).to(bookExchange).with("bookRoutingKey");
     }
@@ -48,11 +38,6 @@ public class RabbitMQConfig {
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
-
-        // Konfigurieren der Reply-To Adresse und des Timeout
-        rabbitTemplate.setReplyAddress("bookResponseQueue");
-        rabbitTemplate.setReplyTimeout(6000); // Timeout in Millisekunden, anpassen nach Bedarf
-
         return rabbitTemplate;
     }
 
