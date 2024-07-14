@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
                       );
     }
 
-    @Scheduled(fixedRate = 1000000) // Zeit in Millisekunden
+    @Scheduled(fixedRate = 10000) // Zeit in Millisekunden
     public void scheduledUpdate() {
         syncBooksFromExternalApi();
 }
