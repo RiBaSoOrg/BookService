@@ -31,10 +31,9 @@ public class BookConsumer {
     }
 
     @RabbitListener(queues = "bookQueue")
-    @SendTo("bookQueue")
-    public Book getBookDetails(String bookId) throws BookNotFoundException {
+    public void getBookDetails(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
         log.info("Received book ID: {}, Book Title: {}", bookId, book.getTitle());
-        return book;
+        rabbitTemplate.convertAndSend("bookQueue",book);
     }
 }
