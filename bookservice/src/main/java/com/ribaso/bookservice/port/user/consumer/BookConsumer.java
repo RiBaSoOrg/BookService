@@ -7,11 +7,13 @@ import com.ribaso.bookservice.port.exceptions.BookNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +33,19 @@ public class BookConsumer {
     }
 
     @RabbitListener(queues = "bookQueue")
-    public void getBookDetails(String bookId) throws BookNotFoundException {
-        Book book = bookService.getBook(bookId);
-        System.out.println(bookId);
-        System.out.println("Received book: " + book.getTitle());
-        try {
-            rabbitTemplate.convertAndSend("bookExchange", "bookResponseRoutingKey", book);
-            log.info("Book send: " +book.getTitle());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to serialize book details", e);
-        }
+public void getBookDetails(String bookId, @Header("correlationId") String correlationId) throws BookNotFoundException {
+    Book book = bookService.getBook(bookId);
+    System.out.println(bookId);
+    System.out.println("Received book: " + book.getTitle());
+    try {
+        MessagePostProcessor messagePostProcessor = message -> {
+            message.getMessageProperties().setCorrelationId(correlationId);
+            return message;
+        };
+        rabbitTemplate.convertAndSend("bookExchange", "bookResponseRoutingKey", book, messagePostProcessor);
+        log.info("Book sent: " + book.getTitle() + " with correlation ID: " + correlationId);
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to serialize book details", e);
     }
+}
 }
