@@ -69,4 +69,14 @@ public class BookController {
         
         return ResponseEntity.ok(bookService.getBooks(amount));
     }
+
+    @GetMapping("/sync-books")
+    public ResponseEntity<String> syncBooksFromApi() {
+        try {
+            bookService.syncBooksFromExternalApi();
+            return ResponseEntity.ok("Books successfully synchronized from external API.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to synchronize books: " + e.getMessage());
+        }
+    }
 }

@@ -57,4 +57,8 @@ public interface BookService {
      * @return a list of books
      */
     List<Book> getBooks(int amount);
+
+    void syncBooksFromExternalApi();
+
+
 }
