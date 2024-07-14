@@ -31,15 +31,10 @@ public class BookConsumer {
     }
 
     @RabbitListener(queues = "bookQueue")
-    public void getBookDetails(String bookId) throws BookNotFoundException {
+    @SendTo("bookResponseQueue")
+    public Book getBookDetails(String bookId) throws BookNotFoundException {
         Book book = bookService.getBook(bookId);
-        System.out.println(bookId);
-        System.out.println("Received book: " + book.getTitle());
-        try {
-            rabbitTemplate.convertAndSend("bookExchange", "bookRoutingKey", book);
-            log.info("Book send: " +book.getTitle());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to serialize book details", e);
-        }
+        log.info("Received book ID: {}, Book Title: {}", bookId, book.getTitle());
+        return book;
     }
 }
