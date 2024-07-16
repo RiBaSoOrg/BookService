@@ -70,6 +70,7 @@ public class BookController {
         @RequestParam(required = false) String _sort,
         @RequestParam(required = false) String _order) {
         
+        try {
         List<Book> books;
         if (_sort != null && _sort.equals("numPages") && _order != null) {
             books = bookService.getBooksFilteredAndSorted(minPages, maxPages, _sort, _order);
@@ -78,6 +79,11 @@ public class BookController {
         }
         
         return ResponseEntity.ok(books);
+    } catch (Exception e) {
+        // Log the error message
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
     }
 
 
