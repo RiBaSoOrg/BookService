@@ -36,7 +36,7 @@ public class BookControllerIntegrationTest {
     @BeforeEach
     void setUp() {
         bookRepository.deleteAll();
-        book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", 100);
+        book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", "http://cover", 100);
         bookRepository.save(book);
     }
 
@@ -56,7 +56,7 @@ public class BookControllerIntegrationTest {
 
     @Test
     void addBook_ShouldAddBook_WhenValidRequest() throws Exception {
-        Book newBook = new Book("2", "New Title", "New Subtitle", "987654321", "New Abstract", "New Author", "New Publisher", "New Price", 200);
+        Book newBook = new Book("2", "New Title", "New Subtitle", "987654321", "New Abstract", "New Author", "New Publisher", "New Price","http://cover", 200);
 
         mockMvc.perform(post("/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +84,7 @@ public class BookControllerIntegrationTest {
 
     @Test
     void updateBook_ShouldReturnNotFound_WhenBookDoesNotExist() throws Exception {
-        Book newBook = new Book("999", "Non-Existing Book", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", 100);
+        Book newBook = new Book("999", "Non-Existing Book", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price","http://cover", 100);
 
         mockMvc.perform(put("/books/999")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -39,7 +39,7 @@ class BookControllerTest {
 
     @BeforeEach
     void setUp() {
-        book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", 100);
+        book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price","http://cover", 100);
     }
 
     @Test

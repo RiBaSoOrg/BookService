@@ -23,5 +23,6 @@ public class Book  {
     private String author;
     private String publisher;
     private String price;
+    private String cover;
     private int numPages;
 }

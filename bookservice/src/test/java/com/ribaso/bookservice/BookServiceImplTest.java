@@ -39,8 +39,8 @@ class BookServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price", 100);
-        bookDTO = new BookDTO("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "10", 100);
+        book = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "Price","http://cover", 100);
+        bookDTO = new BookDTO("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "10", "http://cover",100);
     }
     
 
@@ -157,7 +157,7 @@ class BookServiceImplTest {
         assertTrue(foundBooks.isEmpty());
     }
 
-    
+
       @Test
     void syncBooksFromExternalApi_ShouldFetchAndSaveNewBooks() {
         when(bookClient.fetchBooks()).thenReturn(Arrays.asList(bookDTO));
@@ -172,7 +172,7 @@ class BookServiceImplTest {
     void syncBooksFromExternalApi_ShouldUpdateExistingBooks() {
         when(bookClient.fetchBooks()).thenReturn(Arrays.asList(bookDTO));
         when(bookRepository.existsById("1")).thenReturn(true);
-        Book newBook = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "10", 100);
+        Book newBook = new Book("1", "Title", "Subtitle", "123456789", "Abstract", "Author", "Publisher", "10","http://cover", 100);
         when(bookRepository.findById("1")).thenReturn(Optional.of(book));
 
         bookService.syncBooksFromExternalApi();

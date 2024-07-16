@@ -104,6 +104,7 @@ public class BookServiceImpl implements BookService {
         book.setAuthor(dto.getAuthor());
         book.setPublisher(dto.getPublisher());
         book.setPrice(dto.getPrice());
+        book.setCover(dto.getCover());
         book.setNumPages(dto.getNumPages()); 
         return book;
     }
