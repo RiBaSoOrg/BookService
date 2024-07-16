@@ -64,12 +64,26 @@ public class BookServiceImpl implements BookService {
         return book.getId();
     }
 
+
     @Override
-    public List<Book> getBooks(int amount) {
+    public List<Book> getBooksFilteredAndSorted(Integer minPages, Integer maxPages, String sortBy, String order) {
         List<Book> books = bookRepository.findAll();
-        if (amount > 0) {
-            return books.stream().limit(amount).collect(Collectors.toList());
+
+        // Filtering
+        books = books.stream()
+                .filter(book -> (minPages == null || book.getNumPages() >= minPages) &&
+                                (maxPages == null || book.getNumPages() <= maxPages))
+                .collect(Collectors.toList());
+
+        // Sorting
+        if (sortBy != null && sortBy.equals("numPages")) {
+            if ("asc".equalsIgnoreCase(order)) {
+                books.sort((b1, b2) -> Integer.compare(b1.getNumPages(), b2.getNumPages()));
+            } else if ("desc".equalsIgnoreCase(order)) {
+                books.sort((b1, b2) -> Integer.compare(b2.getNumPages(), b1.getNumPages()));
+            }
         }
+
         return books;
     }
 
@@ -116,8 +130,5 @@ public class BookServiceImpl implements BookService {
                       );
     }
 
-    /*@Scheduled(fixedRate = 10000) // Zeit in Millisekunden
-    public void scheduledUpdate() {
-        syncBooksFromExternalApi();
-}*/
+    
 }

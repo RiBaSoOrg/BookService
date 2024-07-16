@@ -63,13 +63,23 @@ public class BookController {
     }
 
     @GetMapping
-    @Operation(summary = "Retrieve books", description = "Retrieves a list of books. If 'amount' is set to 0, all books will be returned.")
-    public ResponseEntity<List<Book>> getBooks(@RequestParam (required = true)
-    @Parameter(description = "The maximum number of books to retrieve. Set to 0 to retrieve all books.")
-    int amount) {
+    @Operation(summary = "Retrieve books", description = "Retrieves a list of books filtered by pages and sorted by specified field.")
+    public ResponseEntity<List<Book>> getBooks(
+        @RequestParam(required = false) Integer minPages,
+        @RequestParam(required = false) Integer maxPages,
+        @RequestParam(required = false) String _sort,
+        @RequestParam(required = false) String _order) {
         
-        return ResponseEntity.ok(bookService.getBooks(amount));
+        List<Book> books;
+        if (_sort != null && _sort.equals("numPages") && _order != null) {
+            books = bookService.getBooksFilteredAndSorted(minPages, maxPages, _sort, _order);
+        } else {
+            books = bookService.getBooksFilteredAndSorted(minPages, maxPages, null, null);
+        }
+        
+        return ResponseEntity.ok(books);
     }
+
 
     @GetMapping("/sync-books")
     public ResponseEntity<String> syncBooksFromApi() {

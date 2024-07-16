@@ -51,14 +51,21 @@ public interface BookService {
     String getBookID(String isbn) throws BookNotFoundException;
 
     /**
-     * Retrieves a list of books.
+     * Retrieves a list of books filtered by the specified page range and sorted
+     * according to the specified field and order.
      *
-     * @param amount the maximum number of books to retrieve
-     * @return a list of books
+     * @param minPages the minimum number of pages to filter the books, or null to ignore this filter
+     * @param maxPages the maximum number of pages to filter the books, or null to ignore this filter
+     * @param sortBy the field by which to sort the books (e.g., "numPages"), or null for no sorting
+     * @param order the order of sorting: "asc" for ascending or "desc" for descending, or null for no specific order
+     * @return a list of books that match the filtering and sorting criteria
      */
-    List<Book> getBooks(int amount);
-
+    List<Book> getBooksFilteredAndSorted(Integer minPages, Integer maxPages, String sortBy, String order);
+    
+    /**
+     * Synchronizes books from an external API and updates the local book repository.
+     * This method fetches data from a predefined external source and updates the
+     * local database with the new information.
+     */
     void syncBooksFromExternalApi();
-
-
 }
