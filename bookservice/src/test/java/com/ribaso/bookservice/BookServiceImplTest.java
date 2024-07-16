@@ -126,16 +126,38 @@ class BookServiceImplTest {
     }
 
     @Test
-    void getBooks_ShouldReturnListOfBooks() {
+    void getBooksFilteredAndSorted_ShouldReturnListOfBooks() {
         List<Book> books = Arrays.asList(book);
         when(bookRepository.findAll()).thenReturn(books);
 
-        List<Book> foundBooks = bookService.getBooks(1);
+        List<Book> foundBooks = bookService.getBooksFilteredAndSorted(null, null, "numPages", "asc");
 
         assertEquals(1, foundBooks.size());
         assertEquals(book.getId(), foundBooks.get(0).getId());
     }
 
+    @Test
+    void getBooksFilteredAndSorted_ShouldReturnFilteredBooks_WhenMinPagesAndMaxPagesAreSpecified() {
+        List<Book> books = Arrays.asList(book);
+        when(bookRepository.findAll()).thenReturn(books);
+
+        List<Book> foundBooks = bookService.getBooksFilteredAndSorted(50, 150, "numPages", "asc");
+
+        assertEquals(1, foundBooks.size());
+        assertEquals(book.getId(), foundBooks.get(0).getId());
+    }
+
+    @Test
+    void getBooksFilteredAndSorted_ShouldReturnEmptyList_WhenNoBooksMatchFilter() {
+        List<Book> books = Arrays.asList(book);
+        when(bookRepository.findAll()).thenReturn(books);
+
+        List<Book> foundBooks = bookService.getBooksFilteredAndSorted(200, 300, "numPages", "asc");
+
+        assertTrue(foundBooks.isEmpty());
+    }
+
+    
       @Test
     void syncBooksFromExternalApi_ShouldFetchAndSaveNewBooks() {
         when(bookClient.fetchBooks()).thenReturn(Arrays.asList(bookDTO));

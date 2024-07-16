@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -106,13 +107,33 @@ class BookControllerTest {
     }
 
     @Test
-    void getBooks_ShouldReturnListOfBooks() throws Exception {
+    void getBooksFilteredAndSorted_ShouldReturnListOfBooks() throws Exception {
         List<Book> books = Arrays.asList(book);
-        when(bookService.getBooks(1)).thenReturn(books);
+        when(bookService.getBooksFilteredAndSorted(null, null, "numPages", "asc")).thenReturn(books);
 
-        mockMvc.perform(get("/books?amount=1"))
+        mockMvc.perform(get("/books?_sort=numPages&_order=asc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].id").value(book.getId()));
+    }
+
+    @Test
+    void getBooksFilteredAndSorted_ShouldReturnListOfFilteredBooks() throws Exception {
+        List<Book> books = Arrays.asList(book);
+        when(bookService.getBooksFilteredAndSorted(50, 150, "numPages", "asc")).thenReturn(books);
+
+        mockMvc.perform(get("/books?_sort=numPages&_order=asc&minPages=50&maxPages=150"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(book.getId()));
+    }
+
+    @Test
+    void getBooksFilteredAndSorted_ShouldReturnEmptyList_WhenNoBooksMatchFilter() throws Exception {
+        when(bookService.getBooksFilteredAndSorted(200, 300, "numPages", "asc")).thenReturn(Arrays.asList());
+
+        mockMvc.perform(get("/books?_sort=numPages&_order=asc&minPages=200&maxPages=300"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
     }
 }
