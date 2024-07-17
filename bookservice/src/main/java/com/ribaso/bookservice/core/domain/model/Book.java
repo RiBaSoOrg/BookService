@@ -17,7 +17,6 @@ public class Book  {
     private String title;
     private String subtitle;
     private String isbn;
-    
     @Column(name = "abstract_text", length = 1000)
     private String abstractText;  
     private String author;
