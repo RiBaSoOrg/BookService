@@ -8,8 +8,14 @@ VOLUME /tmp
 ARG JAR_FILE=target/bookservice-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
+# Kopiere das Start-Skript in das Image
+COPY start.sh /app/start.sh
+
+# Mache das Start-Skript ausführbar
+RUN chmod +x /app/start.sh
+
 # Exponiere den Port, auf dem die Anwendung läuft
 EXPOSE 8080
 
-# Starte die Anwendung
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Starte das Start-Skript
+ENTRYPOINT ["/app/start.sh"]
