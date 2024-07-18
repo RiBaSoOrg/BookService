@@ -3,7 +3,7 @@ name: Build and Deploy to Docker Hub
 on:
   push:
     branches:
-      - main
+      - keycloak
 
 jobs:
   build:
@@ -22,10 +22,10 @@ jobs:
       run: mvn -f bookservice/pom.xml clean package
 
     - name: Build Docker image
-      run: docker build -f bookservice/Dockerfile -t ribaso/bookservice:latest bookservice/
+      run: docker build -f bookservice/Dockerfile -t ribaso/bookservice:keycloak bookservice/
 
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Push Docker image to Docker Hub
-      run: docker push ribaso/bookservice:latest
+      run: docker push ribaso/bookservice:keycloak
